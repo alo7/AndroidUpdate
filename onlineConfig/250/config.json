@@ -1,0 +1,16 @@
+{
+  "lastVersionCode" : 20000,
+  "downloadUrl": "http://www.wandoujia.com/apps/com.alo7.axt.parent/binding?source=wandoujia-web_direct_binded",
+  "releaseNotes": "应用更新说明a1adf，需要弹框",
+  "minimumRequiredVersion": 20000, //如果当前版本号小于此版本，引导强制更新
+  "isUpdateOnlyWifi": true, //现在采用系统的downloadManager来实现下载，umeng是采用自定义    DownloadingService extends android.app.Service来实现下载.....不晓得系统有木有wifi下载控制
+  "patches":["http://xingshijie.github.io/update/patch/app-parent-debug-andfix-fix-exception-e307b45c19e4a9ce4ac1258b9562e6ed.apatch"],	//理论上可以向所有版本下发相同补丁文件
+  "isNeedRemovePatch": false,	//是否需要清除补丁
+
+  //高级特性，以后添加
+  "apkSize": 20.6 , //单位 m
+  "isDeltaUpdate": false, //增量更新
+  "isSilentDownload": false,
+  "apkMD5": "md5"
+  //
+}
