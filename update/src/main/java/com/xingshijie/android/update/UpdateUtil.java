@@ -10,21 +10,25 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.widget.Toast;
 
-
+import java.io.File;
 
 
 public class UpdateUtil {
 
     private static final String SHARED_PREFERENCES_NAME = "update";
     private static final String IGNORE_VERSION = "saveIgnoreVersion";
+    private static final String DOWNLOADED_APK_PATH = "downloaded_apk_path";
+    private static final String DOWNLOADED_VERSION_CODE = "downloaded_version_code";
 
     private static boolean hasShownUpdateDialog = false;
     private static boolean hasShownForceUpdateDialog = false;
+    private static Uri downloadedApkUri;
 
     /**
      * 设置配置文件的相对路径,此路径下必须存在配置文件
      * rel_url + "/config.json"
-     * @param relUrl  relUrl cant null or end with '/'
+     *
+     * @param relUrl relUrl cant null or end with '/'
      */
     public static void setRelUrl(String relUrl) {
         ConfigUtils.setRelUrl(relUrl);
@@ -90,21 +94,58 @@ public class UpdateUtil {
         context.startActivity(intent);
     }
 
-    public static void saveIgnoreVersion(Context context, int versionCode){
+    public static void saveIgnoreVersion(Context context, int versionCode) {
         SharedPreferences.Editor editor = context.getApplicationContext().
                 getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit();
         editor.putInt(IGNORE_VERSION, versionCode);
         editor.commit();
     }
 
-    public static boolean isIgnoreVersion(Context context, int versionCode){
+    public static boolean isIgnoreVersion(Context context, int versionCode) {
         int ignoreVersion = context.getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE).getInt(IGNORE_VERSION, 0);
         return ignoreVersion == versionCode;
     }
 
-    public static void downloadApkAndInstall(Context context, String url) {
+    private static void saveDownloadedApkPathAndVersionCode(Context context, String path, int versionCode) {
+        SharedPreferences.Editor editor = context.getApplicationContext().
+                getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit();
+        editor.putString(DOWNLOADED_APK_PATH, path);
+        editor.putInt(DOWNLOADED_VERSION_CODE, versionCode);
+        editor.commit();
+    }
+
+    /**
+     * @param versionCode 使用versionCode来判别Apk文件是否下载,以后可以改成根据md5判断文件是否下载
+     * @return 返回下载文件的路径, 如果不存在, 返回null
+     */
+    private static File getDownloadApkFile(Context context, int versionCode) {
         try {
+            SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+            int downloadedVersionCode = sp.getInt(DOWNLOADED_VERSION_CODE, 0);
+            if (versionCode == downloadedVersionCode) {
+                String path = sp.getString(DOWNLOADED_APK_PATH, "");
+                File file = new File(path);
+                if (file.isFile()) {
+                    return file;
+                }
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static void downloadApkAndInstall(Context context, final OnlineConfig config) {
+        try {
+            String url = config.getDownloadUrl();
+            int versionCode = config.getLastVersionCode();
+            File file = getDownloadApkFile(context, config.getLastVersionCode());
+            if (file != null) {
+                promptInstall(context, Uri.fromFile(file));
+                return;
+            }
+
             final Context applicationContext = context.getApplicationContext();
             final DownloadManager downloadManager = (DownloadManager) applicationContext
                     .getSystemService(Context.DOWNLOAD_SERVICE);
@@ -130,6 +171,7 @@ public class UpdateUtil {
                         if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
                             // 获取下载好的 apk 路径
                             String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
+                            saveDownloadedApkPathAndVersionCode(applicationContext, uriString, config.getLastVersionCode());
                             // 提示用户安装
                             promptInstall(applicationContext, Uri.parse("file://" + uriString));
                         }

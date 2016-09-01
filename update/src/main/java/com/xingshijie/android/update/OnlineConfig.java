@@ -13,10 +13,6 @@ public class OnlineConfig implements Serializable{
      * releaseNotes : 应用更新说明，需要弹框
      * minimumRequiredVersion : 9000
      * isUpdateOnlyWifi : true
-     * patches : []
-     * apkSize : 20.6
-     * isDeltaUpdate : false
-     * isSilentDownload : false
      */
 
     private int lastVersionCode;
