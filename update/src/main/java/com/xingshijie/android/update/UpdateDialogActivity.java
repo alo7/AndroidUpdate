@@ -74,26 +74,27 @@ public class UpdateDialogActivity extends Activity implements View.OnClickListen
 
         if (i == R.id.umeng_update_id_ok) {
             UpdateUtil.downloadApkAndInstall(this, config);
-            if (isForceUpdate) {
-                updateOk.setVisibility(View.GONE);
-                updateCancel.setEnabled(false);
-                updateCancel.setText("正在下载应用程序");
-            } else {
-                finish();
-            }
+//            if (isForceUpdate) {
+//                updateOk.setVisibility(View.GONE);
+//                updateCancel.setEnabled(false);
+//                updateCancel.setText("正在下载应用程序");
+//            } else {
+//                finish();
+//            }
+            finish();
 
         } else if (i == R.id.umeng_update_id_cancel) {
-            if (isForceUpdate) {
-                Toast.makeText(this, "不更新将无法使用app", Toast.LENGTH_LONG).show();
-            } else {
-                if (updateCheck.isChecked()) {
-                    UpdateUtil.saveIgnoreVersion(this, config.getLastVersionCode());
-                }
-                finish();
-            }
-
-        } else if (i == R.id.umeng_update_id_close) {
-
+//            if (isForceUpdate) {
+//                Toast.makeText(this, "不更新将无法使用app", Toast.LENGTH_LONG).show();
+//            } else {
+//                if (updateCheck.isChecked()) {
+//                    UpdateUtil.saveIgnoreVersion(this, config.getLastVersionCode());
+//                }
+//                finish();
+//            }
+            finish();
+        } else {
+            finish();
         }
     }
 
