@@ -26,6 +26,49 @@ public class OnlineConfig implements Serializable{
     private Boolean isUpdateOnlyWifi;
     private double apkSize;
 
+    public OnlineConfig(){
+
+    }
+
+    public OnlineConfig(JSONObject jsonObject){
+        //自带的jsonObject加载不存在的key值会出异常,所以只有这样了,因为没法保证一定存在这个字段
+        try {
+            lastVersionCode = jsonObject.getInt("lastVersionCode");
+        } catch (Exception e) {
+        }
+
+        try {
+            downloadUrl = jsonObject.getString("downloadUrl");
+        } catch (Exception e) {
+
+        }
+
+        try {
+            releaseNotes = jsonObject.getString("releaseNotes");
+        } catch (Exception e) {
+
+        }
+
+        try {
+            minimumRequiredVersion = jsonObject.getInt("minimumRequiredVersion");
+        } catch (Exception e) {
+
+        }
+
+        try {
+            isUpdateOnlyWifi = jsonObject.getBoolean("isUpdateOnlyWifi");
+        } catch (Exception e) {
+
+        }
+
+        try {
+            apkSize = jsonObject.getDouble("apkSize");
+        } catch (Exception e) {
+
+        }
+
+    }
+
     public int getLastVersionCode() {
         return lastVersionCode;
     }

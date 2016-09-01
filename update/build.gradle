@@ -6,7 +6,6 @@ android {
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 24
         versionCode 1
         versionName "0.1"
     }
@@ -15,9 +14,4 @@ android {
             minifyEnabled false
         }
     }
-}
-
-dependencies {
-    compile 'com.alibaba:fastjson:1.2.16'
-    testCompile 'junit:junit:4.12'
 }

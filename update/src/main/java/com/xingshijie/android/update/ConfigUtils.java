@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 
-import com.alibaba.fastjson.JSON;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -144,7 +144,7 @@ public class ConfigUtils {
                         sb.append(line).append("\n");
                     }
                     br.close();
-                    return JSON.parseObject(sb.toString(), OnlineConfig.class);
+                    return new OnlineConfig(new JSONObject(sb.toString()));
             }
 
         } catch (IOException ex) {
