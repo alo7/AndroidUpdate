@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.widget.Toast;
@@ -13,6 +14,9 @@ import android.widget.Toast;
 
 
 public class UpdateUtil {
+
+    private static final String SHARED_PREFERENCES_NAME = "update";
+    private static final String IGNORE_VERSION = "saveIgnoreVersion";
 
     private static boolean hasShownUpdateDialog = false;
     private static boolean hasShownForceUpdateDialog = false;
@@ -36,7 +40,7 @@ public class UpdateUtil {
                 if (CommonUtil.getVersionCode(context) < config.getMinimumRequiredVersion()) {
                     showForceUpdate(context);
                 } else if (CommonUtil.getVersionCode(context) < config.getLastVersionCode()) {
-                    if (!hasShownUpdateDialog) {
+                    if (!hasShownUpdateDialog && !isIgnoreVersion(context, config.getLastVersionCode())) {
                         showUpdateDialog(context, config);
                         hasShownUpdateDialog = true;
                     }
@@ -84,6 +88,19 @@ public class UpdateUtil {
         Intent intent = UpdateDialogActivity.getIntent(context, config, false);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+
+    public static void saveIgnoreVersion(Context context, int versionCode){
+        SharedPreferences.Editor editor = context.getApplicationContext().
+                getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit();
+        editor.putInt(IGNORE_VERSION, versionCode);
+        editor.commit();
+    }
+
+    public static boolean isIgnoreVersion(Context context, int versionCode){
+        int ignoreVersion = context.getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_NAME,
+                Context.MODE_PRIVATE).getInt(IGNORE_VERSION, 0);
+        return ignoreVersion == versionCode;
     }
 
     public static void downloadApkAndInstall(Context context, String url) {

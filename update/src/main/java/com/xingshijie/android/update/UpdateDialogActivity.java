@@ -63,6 +63,9 @@ public class UpdateDialogActivity extends Activity implements View.OnClickListen
         updateIgnore.setOnClickListener(this);
 
         updateContent.setText(config.getReleaseNotes());
+        if (isForceUpdate) {
+            updateCheck.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -83,6 +86,9 @@ public class UpdateDialogActivity extends Activity implements View.OnClickListen
             if (isForceUpdate) {
                 Toast.makeText(this, "不更新将无法使用app", Toast.LENGTH_LONG).show();
             } else {
+                if (updateCheck.isChecked()) {
+                    UpdateUtil.saveIgnoreVersion(this, config.getLastVersionCode());
+                }
                 finish();
             }
 
@@ -93,6 +99,8 @@ public class UpdateDialogActivity extends Activity implements View.OnClickListen
 
     @Override
     public void onBackPressed() {
-
+        if (!isForceUpdate) {
+            super.onBackPressed();
+        }
     }
 }
