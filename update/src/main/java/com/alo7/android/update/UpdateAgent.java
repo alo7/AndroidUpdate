@@ -15,13 +15,12 @@ import java.io.File;
 
 public class UpdateAgent {
 
-    private static final String SHARED_PREFERENCES_NAME = "update";
+    public static final String SHARED_PREFERENCES_NAME = "update";
     private static final String IGNORE_VERSION = "saveIgnoreVersion";
     private static final String DOWNLOADED_APK_PATH = "downloaded_apk_path";
     private static final String DOWNLOADED_VERSION_CODE = "downloaded_version_code";
 
     private static boolean hasShownUpdateDialog = false;
-    private static boolean hasShownForceUpdateDialog = false;
     private static Uri downloadedApkUri;
 
     /**
@@ -39,19 +38,8 @@ public class UpdateAgent {
      *
      * @param url 配置表url的绝对路径
      */
-    public static void setConfigUrl(String url) {
+    static void setConfigUrl(String url) {
         ConfigUtils.setConfigUrl(url);
-    }
-
-    /**
-     * 默认配置文件名为config.json,可以自定义配置文件名,比如说你有release1,和release2两个productFlavor
-     * ,你就可以设置两个版本使用不同的配置文件名,release1.json,release2.json,这样你就可以直接
-     * 在同一个目录下放置不同productFlavor的配置文件
-     *
-     * @param fileName 配置文件的名字
-     */
-    public static void setConfigFileName(String fileName) {
-        ConfigUtils.setConfigFileName(fileName);
     }
 
     public static void checkUpdate(final Context context) {
@@ -62,7 +50,7 @@ public class UpdateAgent {
                     return;
                 }
                 if (CommonUtil.getVersionCode(context) < config.getMinimumRequiredVersion()) {
-                    showForceUpdate(context);
+                    showForceUpdate(context, config);
                 } else if (CommonUtil.getVersionCode(context) < config.getLastVersionCode()) {
                     if (!hasShownUpdateDialog && !isIgnoreVersion(context, config.getLastVersionCode())) {
                         showUpdateDialog(context, config);
@@ -96,6 +84,10 @@ public class UpdateAgent {
     }
 
 
+    /**
+     * 强制检查更新,如果有更新的话,肯定会弹出更新Dialog,不受是否忽略版本或者已经现实更新Dialog的影响,
+     * 适用于用户点击检查更新按钮
+     */
     public static void forceCheckUpdate(final Context context) {
         ConfigUtils.getConfig(context, new ConfigUtils.ConfigListener() {
             @Override
@@ -112,26 +104,13 @@ public class UpdateAgent {
         });
     }
 
-    public static void showForceUpdate(final Context context) {
-        if (hasShownForceUpdateDialog) {
-            return;
-        }
-        ConfigUtils.getConfig(context, new ConfigUtils.ConfigListener() {
-            @Override
-            public void config(OnlineConfig config) {
-                if (config == null) {
-                    return;
-                }
-                Intent intent = UpdateDialogActivity.getIntent(context, config, true);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            }
-        });
-
-        hasShownForceUpdateDialog = true;
+    public static void showForceUpdate(final Context context, OnlineConfig config) {
+        Intent intent = UpdateDialogActivity.getIntent(context, config, true);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
-    private static void showUpdateDialog(Context context, final OnlineConfig config) {
+    public static void showUpdateDialog(Context context, final OnlineConfig config) {
         Intent intent = UpdateDialogActivity.getIntent(context, config, false);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
