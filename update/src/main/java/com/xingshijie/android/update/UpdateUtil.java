@@ -39,8 +39,19 @@ public class UpdateUtil {
      *
      * @param url 配置表url的绝对路径
      */
-    static void setConfigUrl(String url) {
+    public static void setConfigUrl(String url) {
         ConfigUtils.setConfigUrl(url);
+    }
+
+    /**
+     * 默认配置文件名为config.json,可以自定义配置文件名,比如说你有release1,和release2两个productFlavor
+     * ,你就可以设置两个版本使用不同的配置文件名,release1.json,release2.json,这样你就可以直接
+     * 在同一个目录下放置不同productFlavor的配置文件
+     *
+     * @param fileName 配置文件的名字
+     */
+    public static void setConfigFileName(String fileName) {
+        ConfigUtils.setConfigFileName(fileName);
     }
 
     public static void checkUpdate(final Context context) {

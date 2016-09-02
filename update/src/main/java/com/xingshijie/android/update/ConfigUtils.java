@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 public class ConfigUtils {
 
     private static String REL_URL = "http://static-data.alo7.com/axt/android";
-    private static String CONFIG_FILE_NAME = "config.json";
+    private static String configFileName = "config.json";
     private static OnlineConfig combinedConfig;
     private static String configUrl;
 
@@ -82,6 +82,17 @@ public class ConfigUtils {
         configUrl = url;
     }
 
+    /**
+     * 默认配置文件名为config.json,可以自定义配置文件名,比如说你有release1,和release2两个productFlavor
+     * ,你就可以设置两个版本使用不同的配置文件名,release1.json,release2.json,这样你就可以直接
+     * 在同一个目录下放置不同productFlavor的配置文件
+     *
+     * @param fileName 配置文件的名字
+     */
+    public static void setConfigFileName(String fileName) {
+        configFileName = fileName;
+    }
+
 
     public static void updateOnlineConfig(Context context) {
         updateOnlineConfig(context, null);
@@ -91,7 +102,7 @@ public class ConfigUtils {
         if (configUrl != null) {
             return configUrl;
         } else {
-            return REL_URL + "/" + CONFIG_FILE_NAME;
+            return REL_URL + "/" + configFileName;
         }
     }
 
@@ -99,7 +110,7 @@ public class ConfigUtils {
         if (configUrl != null) {
             return null;
         } else {
-            return REL_URL + "/" + CommonUtil.getVersionCode(context) + "/" + CONFIG_FILE_NAME;
+            return REL_URL + "/" + CommonUtil.getVersionCode(context) + "/" + configFileName;
         }
     }
 
