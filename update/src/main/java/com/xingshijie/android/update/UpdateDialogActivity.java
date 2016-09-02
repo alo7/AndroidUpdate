@@ -51,7 +51,6 @@ public class UpdateDialogActivity extends Activity implements View.OnClickListen
         updateClose.setOnClickListener(this);
         updateContent = (TextView)findViewById(R.id.umeng_update_content);
         updateCheck = (CheckBox)findViewById(R.id.umeng_update_id_check);
-        updateCheck.setOnClickListener(this);
         updateOk = (Button)findViewById(R.id.umeng_update_id_ok);
         updateOk.setOnClickListener(this);
         updateCancel = (Button)findViewById(R.id.umeng_update_id_cancel);
@@ -88,12 +87,14 @@ public class UpdateDialogActivity extends Activity implements View.OnClickListen
 //            if (isForceUpdate) {
 //                Toast.makeText(this, "不更新将无法使用app", Toast.LENGTH_LONG).show();
 //            } else {
-//                if (updateCheck.isChecked()) {
-//                    UpdateUtil.saveIgnoreVersion(this, config.getLastVersionCode());
-//                }
+//
 //                finish();
 //            }
+            if (updateCheck.isChecked()) {
+                UpdateUtil.saveIgnoreVersion(this, config.getLastVersionCode());
+            }
             finish();
+
         } else {
             finish();
         }
