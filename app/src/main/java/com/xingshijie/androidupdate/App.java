@@ -2,7 +2,7 @@ package com.xingshijie.androidupdate;
 
 import android.app.Application;
 
-import com.xingshijie.android.update.UpdateUtil;
+import com.xingshijie.android.update.UpdateAgent;
 
 
 /**
@@ -15,7 +15,7 @@ public class App extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-        UpdateUtil.setRelUrl("http://xingshijie.github.io/onlineConfig");
-        UpdateUtil.checkUpdate(this);
+        UpdateAgent.setRelUrl("http://xingshijie.github.io/onlineConfig");
+        UpdateAgent.checkUpdate(this);
     }
 }

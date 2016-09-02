@@ -13,7 +13,7 @@ import android.widget.Toast;
 import java.io.File;
 
 
-public class UpdateUtil {
+public class UpdateAgent {
 
     private static final String SHARED_PREFERENCES_NAME = "update";
     private static final String IGNORE_VERSION = "saveIgnoreVersion";

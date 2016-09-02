@@ -73,7 +73,7 @@ public class UpdateDialogActivity extends Activity implements View.OnClickListen
         int i = v.getId();
 
         if (i == R.id.umeng_update_id_ok) {
-            UpdateUtil.downloadApkAndInstall(this, config);
+            UpdateAgent.downloadApkAndInstall(this, config);
 //            if (isForceUpdate) {
 //                updateOk.setVisibility(View.GONE);
 //                updateCancel.setEnabled(false);
@@ -91,7 +91,7 @@ public class UpdateDialogActivity extends Activity implements View.OnClickListen
 //                finish();
 //            }
             if (updateCheck.isChecked()) {
-                UpdateUtil.saveIgnoreVersion(this, config.getLastVersionCode());
+                UpdateAgent.saveIgnoreVersion(this, config.getLastVersionCode());
             }
             finish();
 
