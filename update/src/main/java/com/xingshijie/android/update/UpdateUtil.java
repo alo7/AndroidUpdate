@@ -34,6 +34,15 @@ public class UpdateUtil {
         ConfigUtils.setRelUrl(relUrl);
     }
 
+    /**
+     * 可以直接使用一个配置表完成更新
+     *
+     * @param url 配置表url的绝对路径
+     */
+    static void setConfigUrl(String url) {
+        ConfigUtils.setConfigUrl(url);
+    }
+
     public static void checkUpdate(final Context context) {
         ConfigUtils.getConfig(context, new ConfigUtils.ConfigListener() {
             @Override

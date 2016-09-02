@@ -8,7 +8,6 @@ import android.os.Process;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -25,6 +24,7 @@ public class ConfigUtils {
     private static String REL_URL = "http://static-data.alo7.com/axt/android";
     private static String CONFIG_FILE_NAME = "config.json";
     private static OnlineConfig combinedConfig;
+    private static String configUrl;
 
 
     private static void updateOnlineConfig(final Context context, final ConfigListener configListener) {
@@ -63,7 +63,7 @@ public class ConfigUtils {
      * rel_url + "/config.json"
      * @param relUrl  relUrl cant null or end with '/'
      */
-    public static void setRelUrl(String relUrl) {
+    static void setRelUrl(String relUrl) {
         if (TextUtils.isEmpty(relUrl)) {
             throw new IllegalArgumentException("relUrl can't null");
         } else if (relUrl.endsWith("/")) {
@@ -73,17 +73,34 @@ public class ConfigUtils {
         }
     }
 
+    /**
+     * 可以直接使用一个配置表完成更新
+     *
+     * @param url 配置表url的绝对路径
+     */
+    static void setConfigUrl(String url) {
+        configUrl = url;
+    }
+
 
     public static void updateOnlineConfig(Context context) {
         updateOnlineConfig(context, null);
     }
 
     private static String getGlobalConfigUrl() {
-        return REL_URL + "/" + CONFIG_FILE_NAME;
+        if (configUrl != null) {
+            return configUrl;
+        } else {
+            return REL_URL + "/" + CONFIG_FILE_NAME;
+        }
     }
 
     private static String getSpecifiedVersionConfigUrl(Context context) {
-        return REL_URL + "/" + CommonUtil.getVersionCode(context) + "/" + CONFIG_FILE_NAME;
+        if (configUrl != null) {
+            return null;
+        } else {
+            return REL_URL + "/" + CommonUtil.getVersionCode(context) + "/" + CONFIG_FILE_NAME;
+        }
     }
 
     public static void getConfig(Context context, ConfigListener configListener) {
@@ -120,6 +137,10 @@ public class ConfigUtils {
 
 
     private static OnlineConfig getJSON(String url) {
+        if (url == null) {
+            return null;
+        }
+
         int timeout = 3000;
         HttpURLConnection c = null;
         try {

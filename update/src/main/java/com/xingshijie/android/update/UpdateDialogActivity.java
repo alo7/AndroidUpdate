@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 
@@ -22,10 +21,6 @@ public class UpdateDialogActivity extends Activity implements View.OnClickListen
 
     private static final String CONFIG = "config";
     private static final String IS_FORCE_UPDATE = "force update";
-
-    private OnlineConfig config;
-    private boolean isForceUpdate;
-
     Button updateCancel;
     Button updateOk;
     TextView updateContent;
@@ -33,6 +28,8 @@ public class UpdateDialogActivity extends Activity implements View.OnClickListen
     Button updateClose;
     ImageView updateWifiIndicator;
     Button updateIgnore;
+    private OnlineConfig config;
+    private boolean isForceUpdate;
 
     public static Intent getIntent(Context context, OnlineConfig config, boolean isForceUpdate){
         Intent intent = new Intent(context, UpdateDialogActivity.class);
@@ -65,6 +62,10 @@ public class UpdateDialogActivity extends Activity implements View.OnClickListen
         updateContent.setText(config.getReleaseNotes());
         if (isForceUpdate) {
             updateCheck.setVisibility(View.GONE);
+        }
+
+        if (CommonUtil.isWifiConnect(this)) {
+            updateWifiIndicator.setVisibility(View.GONE);
         }
     }
 

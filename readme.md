@@ -14,9 +14,7 @@
 
 + 主目录下及onlineConfig/config.json 代表全局配置，如果应用希望向所有版本配置参数就可以修改此文件
 
-+ 250/config.json或251/config.json代表指定版本的配置文件，特定版本的配置文件只有指定版本会收到
-
-+ 使用版本号作为版本唯一标志符，版本号唯一，版本配置唯一，当然也可以使用versionName或者两者联合使用
++ 250/config.json或251/config.json代表指定版本的配置文件，特定版本的配置文件只有指定版本会收到。比如250/config.json只有版本号为250的版本才能拉取这个配置文件。
 
 + 特定版本的配置文件与全局配置文件结构保持一致
 
@@ -49,25 +47,29 @@
    合成规则
 
 ```java
-   public OnlineConfig merge(OnlineConfig globalConfig) {
-           lastVersionCode = lastVersionCode > 0 ? lastVersionCode : globalConfig.lastVersionCode;
-           downloadUrl = TextUtils.isEmpty(downloadUrl) ? globalConfig.getDownloadUrl() : downloadUrl;
-           releaseNotes = releaseNotes == null ? globalConfig.getReleaseNotes() : releaseNotes;
-           minimumRequiredVersion = minimumRequiredVersion > 0 ? minimumRequiredVersion : globalConfig.getMinimumRequiredVersion();
-           isNeedRemovePatch = isNeedRemovePatch == null ? globalConfig.getNeedRemovePatch() : isNeedRemovePatch;
-           if (patches != null) {
-               if (globalConfig.getPatches() != null) {
-                   for (String patch : globalConfig.getPatches()) {
-                       if (!patches.contains(patch)) {
-                           patches.add(patch);
-                       }
-                   }
-               }
-           } else {
-               patches = globalConfig.getPatches();
-           }
-           return this;
-       }
+   private static OnlineConfig mergeConfig(OnlineConfig globalConfig, OnlineConfig versionConfig) {
+        OnlineConfig mergedConfig = new OnlineConfig();
+        if (globalConfig == null) {
+            mergedConfig = versionConfig;
+        } else if (versionConfig == null) {
+            mergedConfig = globalConfig;
+        } else {
+            mergedConfig.setLastVersionCode(versionConfig.getLastVersionCode() > 0 ?
+                    versionConfig.getLastVersionCode() : globalConfig.getLastVersionCode());
+            mergedConfig.setDownloadUrl(versionConfig.getDownloadUrl() != null ?
+                    versionConfig.getDownloadUrl() : globalConfig.getDownloadUrl());
+            mergedConfig.setReleaseNotes(versionConfig.getReleaseNotes() != null ?
+                    versionConfig.getReleaseNotes() : globalConfig.getReleaseNotes());
+            mergedConfig.setMinimumRequiredVersion(versionConfig.getMinimumRequiredVersion() > 0 ?
+                    versionConfig.getMinimumRequiredVersion() : globalConfig.getMinimumRequiredVersion());
+            mergedConfig.setApkSize(versionConfig.getApkSize() > 0 ?
+                    versionConfig.getApkSize() : globalConfig.getApkSize());
+            mergedConfig.setIsUpdateOnlyWifi(versionConfig.isIsUpdateOnlyWifi() != null ?
+                    versionConfig.isIsUpdateOnlyWifi() : globalConfig.isIsUpdateOnlyWifi());
+        }
+
+        return mergedConfig;
+    }
 ```
 
 + 以上做法有几点好处，有全局配置和指定版本配置，就可以方便的实现大部分功能，比如说如果想强制更新所有版本，就可以直接在全局设置修改minimumRequiredVersion和lastVersionCode为最新的版本号，downloadUrl改为最新，当然还得删除指定版本里的这三个字段。
@@ -91,7 +93,7 @@ if (BuildConfig.VERSION_CODE < config.getMinimumRequiredVersion()) {
 
 ## 推荐配置
 
-虽然全局配置和版本控制字段一样，理论上可以对随便搭配，但建议所有版本的更新相关的字段都只在全局配置里写，补丁或者增量更新包只在版本配置里写，这样不容易造成混乱。当然如果只需要更新指定版本时一定要特别注意未来的修改
+虽然全局配置和版本控制字段一样，理论上可以对随便搭配，但建议所有版本的更新相关的字段都只在全局配置里写，补丁或者增量更新包只在版本配置里写，这样不容易造成混乱。当然如果只需要更新指定版本时一定要特别注意未来的修改。
 
 
 
@@ -121,10 +123,6 @@ if (config.getChannel() != null) {
 ## 关于增量更新
 
 大概原理就就是服务器根据新旧apk差别生成增量更新包，客户端根据增量更新包在本地合成新的Apk安装包
-
-## 关于如何下载
-
-下载Apk调用的是系统的下载，所以没有静默下载，同时也没有判定重复的机制
 
 
 
