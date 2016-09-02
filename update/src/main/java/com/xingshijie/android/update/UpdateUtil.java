@@ -73,6 +73,29 @@ public class UpdateUtil {
         });
     }
 
+    public static void checkUpdateWithCustomerListener(final Context context, final UpdateListener listener) {
+        ConfigUtils.getConfig(context, new ConfigUtils.ConfigListener() {
+            @Override
+            public void config(OnlineConfig config) {
+                if (listener == null) {
+                    return;
+                }
+                if (config == null) {
+                    listener.onUpdateReturned(UpdateListener.TIME_OUT, config);
+                    return;
+                }
+                if (CommonUtil.getVersionCode(context) < config.getMinimumRequiredVersion()) {
+                    listener.onUpdateReturned(UpdateListener.FORCE_UPDATE, config);
+                } else if (CommonUtil.getVersionCode(context) < config.getLastVersionCode()) {
+                    listener.onUpdateReturned(UpdateListener.HAS_UPDATE, config);
+                } else {
+                    listener.onUpdateReturned(UpdateListener.NO_UPDATE, config);
+                }
+            }
+        });
+    }
+
+
     public static void forceCheckUpdate(final Context context) {
         ConfigUtils.getConfig(context, new ConfigUtils.ConfigListener() {
             @Override
