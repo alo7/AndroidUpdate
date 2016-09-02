@@ -1,4 +1,22 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.1'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+//这个版本号代表的是最终生成的aar包的版本号
+version = "0.2"
 
 android {
     compileSdkVersion 24
@@ -7,11 +25,78 @@ android {
     defaultConfig {
         minSdkVersion 14
         versionCode 1
-        versionName "0.1"
+        versionName version
     }
     buildTypes {
         release {
             minifyEnabled false
         }
+    }
+}
+
+def siteUrl = 'https://github.com/xingshijie/AndroidUpdate'   // 项目的主页
+def gitUrl = 'https://github.com/xingshijie/AndroidUpdate.git'   // Git仓库的url
+group = "com.alo7.android.update"            // group id,一般填你唯一的包名
+install {
+    repositories.mavenInstaller {
+        //这段代码用来生成pom文件
+        pom {
+            project {
+                packaging 'aar'
+                name 'com.alo7.android.update:update'
+                description = '这里可以写说明'
+                url siteUrl
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'xingshijie'        //填写的一些基本信息
+                        name '邢世杰'
+                        email 'xingshijie11@gmail.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+bintray {
+    user = properties.getProperty("bintray.user")   //bintray网站的用户名
+    key = properties.getProperty("bintray.apikey")
+    configurations = ['archives']
+    pkg {
+        repo = "Android"    //仓库名字,必须和bintray仓库上的名字保持一致
+        name = "update"    //发布到JCenter上的项目名字
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
     }
 }
