@@ -1,4 +1,4 @@
-package com.xingshijie.android.update;
+package com.alo7.android.update;
 
 /**
  * Created by shijie.xing on 16/9/2.

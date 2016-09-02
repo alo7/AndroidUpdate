@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.1"
 
     defaultConfig {
-        applicationId "com.xingshijie.androidupdate"
+        applicationId "com.alo7.androidupdate"
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 250

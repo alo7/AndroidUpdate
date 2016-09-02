@@ -1,4 +1,4 @@
-package com.xingshijie.androidupdate;
+package com.alo7.androidupdate;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

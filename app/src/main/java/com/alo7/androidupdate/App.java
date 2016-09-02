@@ -1,8 +1,8 @@
-package com.xingshijie.androidupdate;
+package com.alo7.androidupdate;
 
 import android.app.Application;
 
-import com.xingshijie.android.update.UpdateAgent;
+import com.alo7.android.update.UpdateAgent;
 
 
 /**

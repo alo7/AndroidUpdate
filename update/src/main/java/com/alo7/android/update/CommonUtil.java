@@ -1,4 +1,4 @@
-package com.xingshijie.android.update;
+package com.alo7.android.update;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

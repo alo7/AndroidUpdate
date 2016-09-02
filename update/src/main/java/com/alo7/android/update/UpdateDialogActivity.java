@@ -1,4 +1,4 @@
-package com.xingshijie.android.update;
+package com.alo7.android.update;
 
 import android.app.Activity;
 import android.content.Context;

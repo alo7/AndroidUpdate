@@ -1,4 +1,4 @@
-package com.xingshijie.androidupdate;
+package com.alo7.androidupdate;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
