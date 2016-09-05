@@ -20,8 +20,6 @@ public class UpdateAgent {
     private static final String DOWNLOADED_APK_PATH = "downloaded_apk_path";
     private static final String DOWNLOADED_VERSION_CODE = "downloaded_version_code";
 
-    private static boolean hasShownUpdateDialog = false;
-
     /**
      * 用于多表配置,设置配置文件的相对路径,此路径下必须存在配置文件
      * rel_url + "/config.json"
@@ -57,9 +55,8 @@ public class UpdateAgent {
                 if (CommonUtil.getVersionCode(context) < config.getMinimumRequiredVersion()) {
                     showForceUpdate(context, config);
                 } else if (CommonUtil.getVersionCode(context) < config.getLastVersionCode()) {
-                    if (!hasShownUpdateDialog && !isIgnoreVersion(context, config.getLastVersionCode())) {
+                    if (!isIgnoreVersion(context, config.getLastVersionCode())) {
                         showUpdateDialog(context, config);
-                        hasShownUpdateDialog = true;
                     }
                 }
             }
