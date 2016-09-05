@@ -21,11 +21,11 @@ public class UpdateAgent {
     private static final String DOWNLOADED_VERSION_CODE = "downloaded_version_code";
 
     private static boolean hasShownUpdateDialog = false;
-    private static Uri downloadedApkUri;
 
     /**
-     * 设置配置文件的相对路径,此路径下必须存在配置文件
+     * 用于多表配置,设置配置文件的相对路径,此路径下必须存在配置文件
      * rel_url + "/config.json"
+     * 默认的配置文件名为config.json, 可使用 {@link ConfigUtils#setConfigFileName(String)} 设置文件名
      *
      * @param relUrl relUrl cant null or end with '/'
      */
@@ -38,10 +38,15 @@ public class UpdateAgent {
      *
      * @param url 配置表url的绝对路径
      */
-    static void setConfigUrl(String url) {
+    public static void setConfigUrl(String url) {
         ConfigUtils.setConfigUrl(url);
     }
 
+    /**
+     * 检查更新,用于应用启动时调用,如果用户已经点击忽略此版本,则此版本的更新提示不再显示.
+     *
+     * @param context context
+     */
     public static void checkUpdate(final Context context) {
         ConfigUtils.getConfig(context, new ConfigUtils.ConfigListener() {
             @Override
@@ -85,8 +90,10 @@ public class UpdateAgent {
 
 
     /**
-     * 强制检查更新,如果有更新的话,肯定会弹出更新Dialog,不受是否忽略版本或者已经现实更新Dialog的影响,
-     * 适用于用户点击检查更新按钮
+     * 强制检查更新,如果有更新的话,肯定会弹出更新Dialog,不受是否忽略版本或者已经显示更新Dialog的影响,
+     * 适用于用户主动点击检查更新
+     *
+     * @param context context
      */
     public static void forceCheckUpdate(final Context context) {
         ConfigUtils.getConfig(context, new ConfigUtils.ConfigListener() {
