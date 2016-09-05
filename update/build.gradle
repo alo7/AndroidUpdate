@@ -16,7 +16,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 //这个版本号代表的是最终生成的aar包的版本号
-version = "0.2"
+version = "0.3"
 
 android {
     compileSdkVersion 24
