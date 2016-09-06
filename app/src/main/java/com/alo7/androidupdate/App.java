@@ -15,7 +15,7 @@ public class App extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-        UpdateAgent.setRelUrl("http://xingshijie.github.io/onlineConfig");
-        UpdateAgent.checkUpdate(this);
+        //设置配置文件的Url
+        UpdateAgent.setConfigUrl("http://xingshijie.github.io/onlineConfig/config.json");
     }
 }
