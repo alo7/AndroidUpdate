@@ -10,7 +10,7 @@ Gradle
 repositories {
    jcenter()
 }
-compile 'com.alo7.android.update:Update:0.4'
+compile 'com.alo7.android.update:Update:0.5'
 ```
 
 调用所有方法之前，必须先调用UpdateAgent.setConfigUrl()设置配置文件的url。
