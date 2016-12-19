@@ -1,15 +1,5 @@
 package com.alo7.android.update;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.AsyncTask;
-import android.os.Process;
-import android.text.TextUtils;
-import android.widget.Toast;
-
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,10 +8,20 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONObject;
+
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.AsyncTask;
+import android.os.Process;
+import android.text.TextUtils;
+import android.widget.Toast;
+
 
 public class ConfigUtils {
 
-    private static String REL_URL = "http://static-data.alo7.com/axt/android";
+    private static String relUrl;
     private static String configFileName = "config.json";
     private static OnlineConfig combinedConfig;
     private static String configUrl;
@@ -69,7 +69,7 @@ public class ConfigUtils {
         } else if (relUrl.endsWith("/")) {
             throw new IllegalArgumentException("relUrl can't end with '/'");
         } else {
-            REL_URL = relUrl;
+            ConfigUtils.relUrl = relUrl;
         }
     }
 
@@ -99,18 +99,20 @@ public class ConfigUtils {
     }
 
     private static String getGlobalConfigUrl() {
+        checkUrl();
         if (configUrl != null) {
             return configUrl;
         } else {
-            return REL_URL + "/" + configFileName;
+            return relUrl + "/" + configFileName;
         }
     }
 
     private static String getSpecifiedVersionConfigUrl(Context context) {
+        checkUrl();
         if (configUrl != null) {
             return null;
         } else {
-            return REL_URL + "/" + CommonUtil.getVersionCode(context) + "/" + configFileName;
+            return relUrl + "/" + CommonUtil.getVersionCode(context) + "/" + configFileName;
         }
     }
 
@@ -193,6 +195,13 @@ public class ConfigUtils {
             }
         }
         return null;
+    }
+
+    private static void checkUrl() {
+        if(TextUtils.isEmpty(relUrl) && TextUtils.isEmpty(configUrl)) {
+            throw new IllegalArgumentException(
+                    "Android Update must set relative url or config url");
+        }
     }
 
     interface ConfigListener {
