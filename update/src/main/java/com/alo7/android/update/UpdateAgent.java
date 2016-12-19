@@ -1,5 +1,8 @@
 package com.alo7.android.update;
 
+import java.io.File;
+import java.util.UUID;
+
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,9 +11,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.widget.Toast;
-
-import java.io.File;
 
 
 public class UpdateAgent {
@@ -177,7 +180,11 @@ public class UpdateAgent {
                     .getSystemService(Context.DOWNLOAD_SERVICE);
             // java.lang.IllegalArgumentException: Can only download HTTP/HTTPS URIs: url
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                request.setDestinationInExternalPublicDir(
+                        Environment.getExternalStorageDirectory().getAbsolutePath(),
+                        UUID.randomUUID() + ".apk");
+            }
             final long enqueueId = downloadManager.enqueue(request);
             final BroadcastReceiver receiver = new BroadcastReceiver() {
                 @Override
