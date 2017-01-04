@@ -1,15 +1,6 @@
 {
-  "lastVersionCode" : 251,  //最新版本的版本号
-  "minimumRequiredVersion": 251, //如果当前版本号小于此版本，引导强制更新
-  "downloadUrl": "url",
-  "releaseNotes": "应用更新说明，需要弹框",
-  "apkSize": 20.6 ,
-  "isUpdateOnlyWifi": true,
-
-  //高级特性,按需添加
-  "isDeltaUpdate": false, //增量更新
-  "patches":[],	//理论上可以向所有版本下发相同补丁文件
-  "isNeedRemovePatch": false,	//是否需要清除补丁
-  "isSilentDownload": false,
-  "apkMD5": "md5"
+  "lastVersionCode": 251,
+  "downloadUrl": "https://github.com/alo7/AndroidUpdate/tree/master/onlineConfig.apk",
+  "releaseNotes": "应用更新说明a1adf，需要弹框",
+  "minimumRequiredVersion": 250
 }
